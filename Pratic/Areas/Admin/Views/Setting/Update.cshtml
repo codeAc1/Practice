@@ -1,0 +1,68 @@
+﻿@model Setting
+@{ ViewData["Title"] = "Update"; }
+
+<div class="row">
+    <div class="col-lg-6 h3 mb-4 text-gray-800">
+        <h1>Setting Update</h1>
+    </div>
+    <div class="col-lg-6">
+        <img style="width:50%" src="~/assets/images/@Model.Logo" alt="Alternate Text" />
+    </div>
+    <div class="col-lg-12 mx-auto">
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label asp-for="LogoImage"></label>
+                <input class="form-control" accept="image/png" asp-for="LogoImage" placeholder="Enter ProductImagesFile">
+                <span class="text-danger" asp-validation-for="LogoImage"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SupportPhone"></label>
+                <input asp-for="SupportPhone" class="form-control" placeholder="Enter Support Phone ...">
+                <span asp-validation-for="SupportPhone"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Phone"></label>
+                <input asp-for="Phone" class="form-control" placeholder="Enter Phone ...">
+                <span asp-validation-for="Phone"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                <input asp-for="Email" class="form-control" placeholder="Enter Email ...">
+                <span asp-validation-for="Email"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address"></label>
+                <input asp-for="Address" class="form-control" placeholder="Enter Address ...">
+                <span asp-validation-for="Address"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="WorkDay"></label>
+                <input asp-for="WorkDay" class="form-control" placeholder="Enter WorkDay ...">
+                <span asp-validation-for="WorkDay"></span>
+            </div>
+            <div id="toolbar-container"></div>
+            <div class="form-group">
+                <label asp-for="Offer"></label>
+                <textarea asp-for="Offer"></textarea>
+                <span class="text-danger" asp-validation-for="Offer"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <a class="btn btn-danger" asp-area="Admin" asp-controller="Setting" asp-action="Index">Cancel</a>
+        </form>
+    </div>
+</div>
+
+@section Script{
+    <partial name="_ValidationPartial.cshtml" />
+    <script src="https://cdn.ckeditor.com/ckeditor5/33.0.0/classic/ckeditor.js"></script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#Offer'))
+            .then(editor => {
+                console.log(editor);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+}
