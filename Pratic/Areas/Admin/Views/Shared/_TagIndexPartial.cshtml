@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<Tag>
 @{ 
-    int count = 0;
+    int count = (ViewBag.PageIndex - 1) * 5;
 }
 
 <table class="table table-striped">
@@ -20,18 +20,18 @@
         <tr>
             <th scope="row">@count</th>
             <td>@tag.Name</td>
-            @*<td>@tag.ProductTags.Count()</td>*@
+            <td>@tag.ProductTags.Count()</td>
             <td style="color:@(tag.IsDeleted ? "red":"green")">@(tag.IsDeleted ? "DeActive":"Active")</td>
             <td>
 
-                <a class="btn btn-warning" asp-action="Update" asp-route-id="@tag.Id">Update</a>
+                <a class="btn btn-warning" asp-action="Update" asp-route-id="@tag.Id" asp-route-status="@ViewBag.Status" asp-route-page="@ViewBag.PageIndex">Update</a>
                 @if (tag.IsDeleted)
                 {
-                    <a id="restoreTag" class="btn btn-primary" asp-action="Restore" asp-route-id="@tag.Id">Restore</a>
+                    <a id="restoreTag" class="btn btn-primary" asp-action="Restore" asp-route-id="@tag.Id" asp-route-status="@ViewBag.Status" asp-route-page="@ViewBag.PageIndex">Restore</a>
                 }
                 else
                 {
-                    <a id="deleteTag" class="btn btn-danger" asp-action="Delete" asp-route-id="@tag.Id">Delete</a>
+                    <a id="deleteTag" class="btn btn-danger" asp-action="Delete" asp-route-id="@tag.Id" asp-route-status="@ViewBag.Status" asp-route-page="@ViewBag.PageIndex">Delete</a>
                 }
 
             </td>

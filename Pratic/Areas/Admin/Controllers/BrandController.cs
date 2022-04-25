@@ -11,25 +11,25 @@ using System.Threading.Tasks;
 namespace Pratic.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class TagController : Controller
+    public class BrandController : Controller
     {
         private readonly AppDbContext _context;
-        public TagController(AppDbContext context)
+        public BrandController(AppDbContext context)
         {
             _context = context;
         }
-        public async Task<IActionResult>  Index( bool? status,int page=1)
+        public async Task<IActionResult> Index(bool? status, int page = 1)
         {
-            
+
             ViewBag.Status = status;
-            IEnumerable<Tag> tags = await _context.Tags
-                .Include(t => t.ProductTags)
-                .Where(t => status != null ? t.IsDeleted == status : true)
+            IEnumerable<Brand> brands = await _context.Brands
+                .Include(b => b.Products)
+                .Where(b => status != null ? b.IsDeleted == status : true)
                 .OrderByDescending(t => t.CreatedAt)
                 .ToListAsync();
             ViewBag.PageIndex = page;
-            ViewBag.PageCount = Math.Ceiling((double)tags.Count()/5);
-            return View(tags.Skip((page-1)*5).Take(5));
+            ViewBag.PageCount = Math.Ceiling((double)brands.Count() / 5);
+            return View(brands.Skip((page - 1) * 5).Take(5));
         }
 
         public IActionResult Create()
@@ -39,14 +39,14 @@ namespace Pratic.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Tag tag)
+        public async Task<IActionResult> Create(Brand brand)
         {
             if (!ModelState.IsValid)
             {
                 return View();
             }
 
-            if (string.IsNullOrWhiteSpace(tag.Name))
+            if (string.IsNullOrWhiteSpace(brand.Name))
             {
                 ModelState.AddModelError("Name", "Bosluq Olmamalidir");
                 return View();
@@ -54,19 +54,19 @@ namespace Pratic.Areas.Admin.Controllers
 
             //tag.Name = tag.Name.Trim();
 
-            if (tag.Name.CheckString())
+            if (brand.Name.CheckString())
             {
                 ModelState.AddModelError("Name", "Yalniz Herf Ola Biler");
                 return View();
             }
 
-            if (await _context.Tags.AnyAsync(t => t.Name.ToLower() == tag.Name.ToLower()))
+            if (await _context.Brands.AnyAsync(t => t.Name.ToLower() == brand.Name.ToLower()))
             {
                 ModelState.AddModelError("Name", "Alreade Exists");
                 return View();
             }
-            tag.CreatedAt = DateTime.UtcNow.AddHours(4);
-            await _context.Tags.AddAsync(tag);
+            brand.CreatedAt = DateTime.UtcNow.AddHours(4);
+            await _context.Brands.AddAsync(brand);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Index");
@@ -76,100 +76,100 @@ namespace Pratic.Areas.Admin.Controllers
         {
             if (id == null) return BadRequest();
 
-            Tag tag = await _context.Tags.FirstOrDefaultAsync(t => t.Id == id);
+            Brand brand = await _context.Brands.FirstOrDefaultAsync(t => t.Id == id);
 
-            if (tag == null) return NotFound();
+            if (brand == null) return NotFound();
 
-            return View(tag);
+            return View(brand);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Update(int? id, Tag tag, bool? status, int page = 1)
+        public async Task<IActionResult> Update(int? id, Brand brand, bool? status, int page = 1)
         {
-            if (!ModelState.IsValid) return View(tag);
+            if (!ModelState.IsValid) return View(brand);
 
             if (id == null) return BadRequest();
 
-            if (id != tag.Id) return BadRequest();
+            if (id != brand.Id) return BadRequest();
 
-            Tag dbTag = await _context.Tags.FirstOrDefaultAsync(t => t.Id == id);
+            Brand dbBrand = await _context.Brands.FirstOrDefaultAsync(t => t.Id == id);
 
-            if (dbTag == null) return NotFound();
+            if (dbBrand == null) return NotFound();
 
-            if (string.IsNullOrWhiteSpace(tag.Name))
+            if (string.IsNullOrWhiteSpace(brand.Name))
             {
                 ModelState.AddModelError("Name", "Bosluq Olmamalidir");
-                return View(tag);
+                return View(brand);
             }
 
-            if (tag.Name.CheckString())
+            if (brand.Name.CheckString())
             {
                 ModelState.AddModelError("Name", "Yalniz Herf Ola Biler");
-                return View(tag);
+                return View(brand);
             }
 
-            if (await _context.Tags.AnyAsync(t => t.Id != tag.Id && t.Name.ToLower() == tag.Name.ToLower()))
+            if (await _context.Tags.AnyAsync(t => t.Id != brand.Id && t.Name.ToLower() == brand.Name.ToLower()))
             {
                 ModelState.AddModelError("Name", "Alreade Exists");
-                return View(tag);
+                return View(brand);
             }
 
-            dbTag.Name = tag.Name;
-            tag.UpdatedAt = DateTime.UtcNow.AddHours(4);
+            dbBrand.Name = brand.Name;
+            brand.UpdatedAt = DateTime.UtcNow.AddHours(4);
 
             await _context.SaveChangesAsync();
 
 
-            return RedirectToAction("Index", new {status=status,page=page });
+            return RedirectToAction("Index", new { status = status, page = page });
         }
 
         public async Task<IActionResult> Delete(int? id, bool? status, int page = 1)
         {
             if (id == null) return BadRequest();
 
-            Tag dbTag = await _context.Tags.FirstOrDefaultAsync(t => t.Id == id);
+            Brand dbBrand = await _context.Brands.FirstOrDefaultAsync(t => t.Id == id);
 
-            if (dbTag == null) return NotFound();
+            if (dbBrand == null) return NotFound();
 
-            dbTag.IsDeleted = true;
-            dbTag.DeletedAt = DateTime.UtcNow.AddHours(4);
-            
+            dbBrand.IsDeleted = true;
+            dbBrand.DeletedAt = DateTime.UtcNow.AddHours(4);
+
             await _context.SaveChangesAsync();
 
             ViewBag.Status = status;
-            IEnumerable<Tag> tags = await _context.Tags
-                .Include(t => t.ProductTags)
+            IEnumerable<Brand> brands = await _context.Brands
+                .Include(t => t.Products)
                 .Where(t => status != null ? t.IsDeleted == status : true)
                 .OrderByDescending(t => t.CreatedAt)
                 .ToListAsync();
             ViewBag.PageIndex = page;
-            ViewBag.PageCount = Math.Ceiling((double)tags.Count() / 5);
-            return PartialView("_TagIndexPartial", tags.Skip((page - 1) * 5).Take(5));
-            
+            ViewBag.PageCount = Math.Ceiling((double)brands.Count() / 5);
+            return PartialView("_BrandIndexPartial", brands.Skip((page - 1) * 5).Take(5));
+
         }
 
         public async Task<IActionResult> Restore(int? id, bool? status, int page = 1)
         {
             if (id == null) return BadRequest();
 
-            Tag dbTag = await _context.Tags.FirstOrDefaultAsync(t => t.Id == id);
+            Brand dbBrand = await _context.Brands.FirstOrDefaultAsync(t => t.Id == id);
 
-            if (dbTag == null) return NotFound();
+            if (dbBrand == null) return NotFound();
 
-            dbTag.IsDeleted = false;
-            dbTag.DeletedAt = null;
+            dbBrand.IsDeleted = false;
+            dbBrand.DeletedAt = null;
             await _context.SaveChangesAsync();
 
             ViewBag.Status = status;
-            IEnumerable<Tag> tags = await _context.Tags
-                .Include(t => t.ProductTags)
+            IEnumerable<Brand> brands = await _context.Brands
+                .Include(t => t.Products)
                 .Where(t => status != null ? t.IsDeleted == status : true)
                 .OrderByDescending(t => t.CreatedAt)
                 .ToListAsync();
             ViewBag.PageIndex = page;
-            ViewBag.PageCount = Math.Ceiling((double)tags.Count() / 5);
-            return PartialView("_TagIndexPartial", tags.Skip((page - 1) * 5).Take(5));
+            ViewBag.PageCount = Math.Ceiling((double)brands.Count() / 5);
+            return PartialView("_BrandIndexPartial", brands.Skip((page - 1) * 5).Take(5));
         }
     }
 }

@@ -87,20 +87,33 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link collapsed" href="~/admin/#" data-toggle="collapse" data-target="#collapsePRO"
+                <a class="nav-link collapsed" href="~/admin/#" data-toggle="collapse" data-target="#collapseBRAND"
                    aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-fw fa-cog"></i>
-                    <span>Product</span>
+                    <span>Brand</span>
                 </a>
-                <div id="collapsePRO" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div id="collapseBRAND" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Custom Products:</h6>
-                        <a class="collapse-item" href="~/admin/buttons.html">Product List</a>
+                        <h6 class="collapse-header">Custom Brands:</h6>
+                        <a class="collapse-item" asp-controller="Brand" asp-action="index">Brand List</a>
 
                     </div>
                 </div>
             </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="~/admin/#" data-toggle="collapse" data-target="#collapseCAT"
+                   aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Category</span>
+                </a>
+                <div id="collapseCAT" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Custom Category:</h6>
+                        <a class="collapse-item" asp-controller="Category" asp-action="index">Category List</a>
 
+                    </div>
+                </div>
+            </li>
             <!-- Nav Item - Utilities Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="~/admin/#" data-toggle="collapse" data-target="#collapseUtilities"

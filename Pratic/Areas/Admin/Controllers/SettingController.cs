@@ -64,7 +64,7 @@ namespace Pratic.Areas.Admin.Controllers
                 if (!setting.LogoImage.CheckFileSize(30))
                 {
                     ModelState.AddModelError("LogoImage", "Secilen Seklin Olcusu Maksimum 30 Kb Ola Biler");
-                    return View();
+                    return View(setting);
                 }
 
                 Helper.DeleteFile(_env, dbSetting.Logo, "assets", "images");
