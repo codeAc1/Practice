@@ -1,0 +1,52 @@
+﻿
+@model IEnumerable<Product>
+@{ int count = (ViewBag.PageIndex - 1) * 5; }
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Image</th>
+            <th scope="col">Name</th>
+            <th scope="col">Product Count</th>
+            <th scope="col">Delete Status</th>
+            <th scope="col">Setting</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Product product in Model)
+        {
+            count++;
+            <tr>
+                <th scope="row">@count</th>
+                <td>
+                    @if (product.MainImage != null)
+                    {
+                        <img src="~/assets/images/product/@product.MainImage" alt="Alternate Text" style="max-width:25%" />
+                    }
+                    else
+                    {
+                        <span class="text-danger">Empty</span>
+                    }
+                </td>
+                <td>@product.Title</td>
+                <td>@product.Count</td>
+                
+                <td style="color:@(product.IsDeleted ? "red":"green")">@(product.IsDeleted ? "DeActive":"Active")</td>
+                <td>
+                    <a class="btn btn-info" asp-action="Detail" asp-route-id="@product.Id" asp-route-status="@ViewBag.Status" asp-route-page="@ViewBag.PageIndex">Detail</a>
+                    <a class="btn btn-primary" asp-action="Update" asp-route-id="@product.Id" asp-route-status="@ViewBag.Status" asp-route-page="@ViewBag.PageIndex">Update</a>
+                    @if (product.IsDeleted)
+                    {
+                        <a id="restoreTag" class="btn btn-primary" asp-action="Restore" asp-route-id="@product.Id" asp-route-status="@ViewBag.Status" asp-route-page="@ViewBag.PageIndex">Restore</a> }
+                    else
+                    {
+                        <a  class="btn btn-warning" asp-action="Delete" asp-route-id="@product.Id" asp-route-status="@ViewBag.Status" asp-route-page="@ViewBag.PageIndex">Delete</a>
+                        <a id="deleteTag" class="btn btn-danger" asp-action="Delete" asp-route-id="@product.Id" asp-route-status="@ViewBag.Status" asp-route-page="@ViewBag.PageIndex">X</a>
+                    }
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -25,18 +25,25 @@ namespace Pratic.Areas.Admin.Controllers
             _context = context;
             _env = env;
         }
-        public async Task<IActionResult> Index(bool? status, int page = 1)
+        public  IActionResult Index(bool? status, bool? isMainRoute, int page = 1)
         {
-
             ViewBag.Status = status;
-            IEnumerable<Category> categories = await _context.Categories
+            ViewBag.isMainRoute = isMainRoute;
+            
+            IQueryable<Category> categories =  _context.Categories
                 .Include(c => c.Products)
-                .Where(c => status != null ? c.IsDeleted == status : true)
                 .OrderByDescending(c => c.CreatedAt)
-                .ToListAsync();
+                .AsQueryable();
+
+            if (status != null)
+                categories = categories.Where(c => c.IsDeleted == status);
+
+            if(isMainRoute != null)
+                categories = categories.Where(c => c.IsMain == isMainRoute);
+
             ViewBag.PageIndex = page;
             ViewBag.PageCount = Math.Ceiling((double)categories.Count() / 5);
-            return View(categories.Skip((page - 1) * 5).Take(5));
+            return View(categories.Skip((page - 1) * 5).Take(5).ToList());
         }
 
         public async Task<IActionResult>  Create()
@@ -47,7 +54,7 @@ namespace Pratic.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Category category)
+        public async Task<IActionResult> Create(Category category, bool? status, bool? isMainRoute, int page = 1)
         {
             ViewBag.MainCategory = await _context.Categories.Where(c => c.IsMain && !c.IsDeleted).ToListAsync();
             if (!ModelState.IsValid)
@@ -118,7 +125,7 @@ namespace Pratic.Areas.Admin.Controllers
             await _context.Categories.AddAsync(category);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Index");
+             return RedirectToAction("Index", new { status = status, page = page , isMainRoute=isMainRoute });
         }
 
         public async Task<IActionResult> Update(int? id)
@@ -132,18 +139,20 @@ namespace Pratic.Areas.Admin.Controllers
 
             
             
-            ViewBag.MainCategory = await _context.Categories.Where(c => c.IsMain && !c.IsDeleted).ToListAsync();
+            ViewBag.MainCategory = await _context.Categories.Where(c =>c.Id!=id && c.IsMain && !c.IsDeleted).ToListAsync();
             return View(category);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Update(int? id, Category category, bool? status, int page = 1)
+        public async Task<IActionResult> Update(int? id, Category category, bool? status, bool? isMainRoute, int page = 1)
         {
-            ViewBag.MainCategory = await _context.Categories.Where(c => c.IsMain && !c.IsDeleted).ToListAsync();
+            ViewBag.MainCategory = await _context.Categories.Where(c => c.Id != id && c.IsMain && !c.IsDeleted).ToListAsync();
             if (!ModelState.IsValid)
             {
                 return View();
             }
+            if (id != category.Id) return BadRequest();
+            
 
             if (string.IsNullOrWhiteSpace(category.Name))
             {
@@ -164,18 +173,28 @@ namespace Pratic.Areas.Admin.Controllers
                 ModelState.AddModelError("Name", "Alreade Exists");
                 return View();
             }
+            if (category.ParentId!=null && id==category.ParentId)
+            {
+                ModelState.AddModelError("ParentId", "Duzgun Parent sec");
+                return View(category);
+            }
 
             Category dbCategory = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
             if (dbCategory == null) return NotFound();
 
             if (category.IsMain)
             {
-                dbCategory.ParentId = null;
+                if (!dbCategory.IsMain && category.CategoryImage==null)
+                {
+                    ModelState.AddModelError("CategoryImage", "Sekil mutleq secilmelidir");
+                    return View(category);
+                }
+                
                 if (category.CategoryImage != null)
                 {
                     if (!category.CategoryImage.CheckFileContentType("image/jpeg"))
                     {
-                        ModelState.AddModelError("LogoImage", "Secilen Seklin Novu Uygun");
+                        ModelState.AddModelError("CategoryImage", "Secilen Seklin Novu Uygun");
                         return View(category);
                     }
 
@@ -194,7 +213,7 @@ namespace Pratic.Areas.Admin.Controllers
                     dbCategory.Image = category.CategoryImage.CreateFile(_env, "assets", "images");
                 }
 
-                
+                dbCategory.ParentId = null;
             }
             else
             {
@@ -208,8 +227,11 @@ namespace Pratic.Areas.Admin.Controllers
                     ModelState.AddModelError("ParentId", "ParentId yalnisdir");
                     return View(category);
                 }
+                if (dbCategory.Image!=null)
+                {
+                    Helper.DeleteFile(_env, dbCategory.Image, "assets", "images");
+                }
                 
-                Helper.DeleteFile(_env, dbCategory.Image, "assets", "images");
                 dbCategory.ParentId = category.ParentId;
                 dbCategory.Image = null;
 
@@ -220,8 +242,70 @@ namespace Pratic.Areas.Admin.Controllers
            
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { status = status, page = page , isMainRoute=isMainRoute });
 
+        }
+
+        public async Task<IActionResult> Delete(int? id, bool? status, bool? isMainRoute, int page = 1)
+        {
+            if (id == null) return BadRequest();
+
+            Category dbCategory = await _context.Categories.Include(c=>c.Children).FirstOrDefaultAsync(t => t.Id == id);
+            
+
+            if (dbCategory == null) return NotFound();
+
+            dbCategory.IsDeleted = true;
+            dbCategory.DeletedAt = DateTime.UtcNow.AddHours(4);
+
+            foreach (Category child in dbCategory.Children.Where(c=>!c.IsDeleted))
+            {
+                child.IsDeleted = true;
+                child.DeletedAt = DateTime.UtcNow.AddHours(4);
+            }
+            
+
+            await _context.SaveChangesAsync();
+
+            ViewBag.Status = status;
+            IEnumerable<Category> categories = await _context.Categories
+                .Include(t => t.Products)
+                .Where(t => status != null ? t.IsDeleted == status : true)
+                .OrderByDescending(t => t.CreatedAt)
+                .ToListAsync();
+            ViewBag.PageIndex = page;
+            ViewBag.PageCount = Math.Ceiling((double)categories.Count() / 5);
+            return PartialView("_CategoryIndexPartial", categories.Skip((page - 1) * 5).Take(5));
+
+        }
+
+        public async Task<IActionResult> Restore(int? id, bool? status, bool? isMainRoute, int page = 1)
+        {
+            if (id == null) return BadRequest();
+
+            Category dbCategory = await _context.Categories.Include(c=>c.Children).FirstOrDefaultAsync(t => t.Id == id);
+            
+
+            if (dbCategory == null) return NotFound();
+
+            foreach (Category child in dbCategory.Children)
+            {
+               child.IsDeleted = false;
+            }
+            dbCategory.IsDeleted = false;
+            dbCategory.DeletedAt = null;
+
+            await _context.SaveChangesAsync();
+
+            ViewBag.Status = status;
+            IEnumerable<Category> categories = await _context.Categories
+                .Include(t => t.Products)
+                .Where(t => status != null ? t.IsDeleted == status : true)
+                .OrderByDescending(t => t.CreatedAt)
+                .ToListAsync();
+            ViewBag.PageIndex = page;
+            ViewBag.PageCount = Math.Ceiling((double)categories.Count() / 5);
+            return PartialView("_CategoryIndexPartial", categories.Skip((page - 1) * 5).Take(5));
         }
     }
 }
