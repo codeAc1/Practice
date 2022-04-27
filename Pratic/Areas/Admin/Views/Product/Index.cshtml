@@ -93,13 +93,13 @@
                     <td>@product.DiscountPrice</td>
                     <td>@product.Brand.Name</td>
                     <td>@product.Category.Name</td>
-                    <td>
+                    <td style="text-wrap">
                         @foreach (ProductTag productTag in product.ProductTags)
                         {
                             tags += productTag.Tag.Name;
                             if (productTag.Tag.Name!=product.ProductTags.Last().Tag.Name)
                             {
-                                tags += ',';
+                                tags += ", ";
                             }
 
                         }
@@ -112,11 +112,11 @@
                         <a class="btn btn-primary" asp-action="Update" asp-route-id="@product.Id" asp-route-status="@ViewBag.Status" asp-route-page="@ViewBag.PageIndex">Update</a>
                         @if (product.IsDeleted)
                         {
-                            <a id="restoreTag" class="btn btn-primary" asp-action="Restore" asp-route-id="@product.Id" asp-route-status="@ViewBag.Status" asp-route-page="@ViewBag.PageIndex">Restore</a> }
+                            <a  class="btn btn-success" asp-action="DeleteRestore" asp-route-id="@product.Id" asp-route-status="@ViewBag.Status" asp-route-page="@ViewBag.PageIndex">Restore</a> }
                         else
                         {
-                            <a class="btn btn-warning" asp-action="Delete" asp-route-id="@product.Id" asp-route-status="@ViewBag.Status" asp-route-page="@ViewBag.PageIndex">Delete</a>
-                            <a id="deleteTag" class="btn btn-danger" asp-action="Delete" asp-route-id="@product.Id" asp-route-status="@ViewBag.Status" asp-route-page="@ViewBag.PageIndex">X</a>
+                            <a class="btn btn-danger" asp-action="DeleteRestore" asp-route-id="@product.Id" asp-route-status="@ViewBag.Status" asp-route-page="@ViewBag.PageIndex">Delete</a>
+                            
                         }
 
                     </td>

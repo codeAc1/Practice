@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,9 +10,9 @@ namespace Pratic.Models
 {
     public class Product : BaseEntity
     {
-        [StringLength(255),Required]
+        [StringLength(255), Required]
         public string Title { get; set; }
-        [Column(TypeName ="money")]
+        [Column(TypeName = "money")]
         public double DiscountPrice { get; set; }
         [Column(TypeName = "money")]
         public double Price { get; set; }
@@ -25,13 +26,26 @@ namespace Pratic.Models
         public string MainImage { get; set; }
         public string HoverImage { get; set; }
         public bool Availability { get; set; }
+        public bool IsNewArrival { get; set; }
+        public bool IsBestseller { get; set; }
+        public bool IsFeatured { get; set; }
+
+        [NotMapped]
+        public List<int> TagIds { get; set; } = new List<int>();
+        [NotMapped]
+        public IFormFile[] ProductImagesFile { get; set; }
+        [NotMapped]
+        public IFormFile MainImageFile { get; set; }
+        [NotMapped]
+        public IFormFile HoverImageFile { get; set; }
 
         public Nullable<int> BrandId { get; set; }
         public Brand Brand { get; set; }
         public Nullable<int> CategoryId { get; set; }
         public Category Category { get; set; }
+        //public List<ProductTag> ProductTags { get; set; }
         public IEnumerable<ProductTag> ProductTags { get; set; }
-        public IEnumerable<ProductImage> ProductImages { get; set; }
+        public List<ProductImage> ProductImages { get; set; }
         public IEnumerable<Review> Reviews { get; set; }
     }
 }
