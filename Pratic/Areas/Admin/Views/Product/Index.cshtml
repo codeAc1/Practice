@@ -78,8 +78,8 @@
                     <td>
                         @if (product.MainImage != null)
                         {
-                            @*<img src="~/assets/images/product/@product.MainImage" alt="Alternate Text" style="max-width:25%" />*@
-                            <span class="text-danger">var</span>
+                            <img src="~/assets/images/product/@product.MainImage" alt="Alternate Text" style="max-width:25% " />
+                            
                         }
                         else
                         {
@@ -112,10 +112,10 @@
                         <a class="btn btn-primary" asp-action="Update" asp-route-id="@product.Id" asp-route-status="@ViewBag.Status" asp-route-page="@ViewBag.PageIndex">Update</a>
                         @if (product.IsDeleted)
                         {
-                            <a  class="btn btn-success" asp-action="DeleteRestore" asp-route-id="@product.Id" asp-route-status="@ViewBag.Status" asp-route-page="@ViewBag.PageIndex">Restore</a> }
+                            <a  class="btn btn-success" asp-action="Delete" asp-route-id="@product.Id" asp-route-status="@ViewBag.Status" asp-route-page="@ViewBag.PageIndex">Restore</a> }
                         else
                         {
-                            <a class="btn btn-danger" asp-action="DeleteRestore" asp-route-id="@product.Id" asp-route-status="@ViewBag.Status" asp-route-page="@ViewBag.PageIndex">Delete</a>
+                            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@product.Id" asp-route-status="@ViewBag.Status" asp-route-page="@ViewBag.PageIndex">Delete</a>
                             
                         }
 

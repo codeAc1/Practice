@@ -170,3 +170,7 @@ C:\Users\Admin\Desktop\Backend dersler\HomeWork\18.04.2022\Pratic\Pratic\obj\Deb
 C:\Users\Admin\Desktop\Backend dersler\HomeWork\18.04.2022\Pratic\Pratic\obj\Debug\netcoreapp3.1\Razor\Areas\Admin\Views\Product\Index.cshtml.g.cs
 C:\Users\Admin\Desktop\Backend dersler\HomeWork\18.04.2022\Pratic\Pratic\obj\Debug\netcoreapp3.1\Razor\Areas\Admin\Views\Shared\_ProductIndexPartial.cshtml.g.cs
 C:\Users\Admin\Desktop\Backend dersler\HomeWork\18.04.2022\Pratic\Pratic\obj\Debug\netcoreapp3.1\Razor\Areas\Admin\Views\Product\Create.cshtml.g.cs
+C:\Users\Admin\Desktop\Backend dersler\HomeWork\18.04.2022\Pratic\Pratic\obj\Debug\netcoreapp3.1\Razor\Areas\Admin\Views\Product\Update.cshtml.g.cs
+C:\Users\Admin\Desktop\Backend dersler\HomeWork\18.04.2022\Pratic\Pratic\obj\Debug\netcoreapp3.1\Razor\Areas\Admin\Views\Shared\_ProductUpdateImagePartial.cshtml.g.cs
+C:\Users\Admin\Desktop\Backend dersler\HomeWork\18.04.2022\Pratic\Pratic\obj\Debug\netcoreapp3.1\Razor\Areas\Admin\Views\Product\Delete.cshtml.g.cs
+C:\Users\Admin\Desktop\Backend dersler\HomeWork\18.04.2022\Pratic\Pratic\obj\Debug\netcoreapp3.1\Razor\Areas\Admin\Views\Product\Detail.cshtml.g.cs
