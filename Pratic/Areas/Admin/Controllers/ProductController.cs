@@ -23,7 +23,7 @@ namespace Pratic.Areas.Admin.Controllers
             _context = context;
             _env = env;
         }
-        public  IActionResult Index(bool? status, int page = 1)
+        public async Task <IActionResult>  Index(bool? status, int page = 1)
         {
             ViewBag.Status = status;
             
@@ -42,7 +42,22 @@ namespace Pratic.Areas.Admin.Controllers
 
             ViewBag.PageIndex = page;
             ViewBag.PageCount = Math.Ceiling((double)products.Count() / 5);
-            return View(products.Skip((page - 1) * 5).Take(5).ToList());
+            return View(await products.Skip((page - 1) * 5).Take(5).ToListAsync());
+        }
+        public async Task<IActionResult> Detail(int? id, bool? status, int page = 1)
+        {
+            if (id == null) return BadRequest();
+
+            Product product = await _context.Products
+                .Include(p => p.ProductTags).ThenInclude(pt => pt.Tag)
+                .Include(p => p.ProductImages)
+                .Include(p => p.Brand)
+                .Include(p => p.Category)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (product == null) return NotFound();
+
+            return View(product);
         }
 
         public async Task<IActionResult> Create (bool? status, int page = 1)
@@ -65,7 +80,11 @@ namespace Pratic.Areas.Admin.Controllers
             {
                 return View();
             }
-
+            if (product.ProductImagesFile==null)
+            {
+                ModelState.AddModelError("ProductImagesFile","Sekil secilmeyib minimum 1 sekil secilmelidir");
+                return View();
+            }
             if (product.ProductImagesFile.Count() > 6)
             {
                 ModelState.AddModelError("ProductImagesFile", $"maksimum yukleyebileceyin say 6");

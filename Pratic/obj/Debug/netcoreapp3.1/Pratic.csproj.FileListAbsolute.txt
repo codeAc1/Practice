@@ -144,8 +144,6 @@ C:\Users\Admin\Desktop\Backend dersler\HomeWork\18.04.2022\Pratic\Pratic\obj\Deb
 C:\Users\Admin\Desktop\Backend dersler\HomeWork\18.04.2022\Pratic\Pratic\obj\Debug\netcoreapp3.1\Pratic.Views.pdb
 C:\Users\Admin\Desktop\Backend dersler\HomeWork\18.04.2022\Pratic\Pratic\obj\Debug\netcoreapp3.1\Razor\Views\Home\Index.cshtml.g.cs
 C:\Users\Admin\Desktop\Backend dersler\HomeWork\18.04.2022\Pratic\Pratic\obj\Debug\netcoreapp3.1\Razor\Views\_ViewStart.cshtml.g.cs
-C:\Users\Admin\Desktop\Backend dersler\HomeWork\18.04.2022\Pratic\Pratic\obj\Debug\netcoreapp3.1\Razor\Views\Shared\Components\Footer\Default.cshtml.g.cs
-C:\Users\Admin\Desktop\Backend dersler\HomeWork\18.04.2022\Pratic\Pratic\obj\Debug\netcoreapp3.1\Razor\Views\Shared\Components\Header\Default.cshtml.g.cs
 C:\Users\Admin\Desktop\Backend dersler\HomeWork\18.04.2022\Pratic\Pratic\obj\Debug\netcoreapp3.1\Razor\Areas\Admin\Views\Shared\_AdminLayout.cshtml.g.cs
 C:\Users\Admin\Desktop\Backend dersler\HomeWork\18.04.2022\Pratic\Pratic\obj\Debug\netcoreapp3.1\Razor\Areas\Admin\Views\_ViewImports.cshtml.g.cs
 C:\Users\Admin\Desktop\Backend dersler\HomeWork\18.04.2022\Pratic\Pratic\obj\Debug\netcoreapp3.1\Razor\Areas\Admin\Views\_ViewStart.cshtml.g.cs

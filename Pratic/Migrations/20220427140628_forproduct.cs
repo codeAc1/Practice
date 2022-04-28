@@ -2,7 +2,7 @@
 
 namespace Pratic.Migrations
 {
-    public partial class test2 : Migration
+    public partial class forproduct : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

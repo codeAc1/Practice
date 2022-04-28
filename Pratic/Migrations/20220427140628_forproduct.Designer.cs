@@ -10,8 +10,8 @@ using Pratic.DAL;
 namespace Pratic.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220427082649_test2")]
-    partial class test2
+    [Migration("20220427140628_forproduct")]
+    partial class forproduct
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
